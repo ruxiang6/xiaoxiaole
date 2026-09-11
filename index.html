@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>萌消乐 · 可玩版</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 手机外框 -->
+  <div class="phone" id="phone">
+    <!-- 绚丽背景层 -->
+    <div class="bg" id="bg"><div class="aurora"></div><div class="rays"></div><div class="bubbles" id="bubbles"></div></div>
+
+    <!-- 顶栏 -->
+    <div class="top">
+      <div class="icon-btn" id="btn-back">‹</div>
+      <div class="pill" id="pill-level">🐾 第 <span class="num">1</span> 关</div>
+      <div class="icon-btn" id="btn-gear">⚙</div>
+    </div>
+
+    <!-- 目标 + 步数 HUD -->
+    <div class="hud" id="hud">
+      <div class="goal" id="goal">
+        <div class="goal-ic" id="goal-ic">🎯</div>
+        <div class="goal-body">
+          <div class="goal-label" id="goal-label">目标</div>
+          <div class="bar"><div class="bar-fill" id="goal-fill"></div></div>
+        </div>
+        <div class="goal-num" id="goal-num">0/0</div>
+      </div>
+      <div class="moves" id="moves"><div class="moves-n" id="moves-n">0</div><div class="moves-l">步数</div></div>
+    </div>
+
+    <!-- 棋盘（app.js 动态渲染 DOM 网格） -->
+    <div class="board-wrap"><div id="board"></div></div>
+
+    <!-- 底部按钮 -->
+    <div class="dock">
+      <div class="fab" id="fab-booster"><span class="ad" id="ad-booster">看广告</span><span class="e">🔨</span><span>助推</span></div>
+      <div class="fab primary" id="fab-hint"><span class="ad" id="ad-hint">看广告</span><span class="e">💡</span><span>提示</span></div>
+      <div class="fab" id="fab-restart">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A7.96 7.96 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg><span>重开</span></div>
+    </div>
+  </div>
+
+  <!-- 引擎（自动生成，玩法逻辑单一真源）→ 词库/出题（网页教育向）→ 应用（渲染/门面/音效） -->
+  <script src="engine.js"></script>
+  <script src="vocab_en.js"></script>
+  <script src="quiz.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

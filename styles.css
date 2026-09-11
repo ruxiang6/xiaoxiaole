@@ -1,0 +1,383 @@
+/* styles.css —— 甜品融合乐可玩版。手机框/背景/dock/弹窗/广告/设置沿用矩阵统一视觉，
+   新增专属：目标+步数 HUD、奶茶甜品瓷砖网格、tier 阶级角标+辉光、三连融合升阶 FX、
+   满阶彩虹核心，以及消除/下落/连锁特效。糖果渐变背景本就贴合甜品主题，予以保留。 */
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Baloo+2:wght@600;800&display=swap');
+
+:root{
+  --red:#FF6B6B; --blue:#4D96FF; --green:#6BCB77; --yellow:#FFD93D;
+  --purple:#9B5DE5; --orange:#FF9F45; --ink:#2b2b45;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overscroll-behavior:none}
+body{
+  font-family:'ZCOOL KuaiLe','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  background:linear-gradient(125deg,#ffd9f4 0%,#d7c9ff 26%,#b8ddff 52%,#bff5ec 76%,#fff2c2 100%);
+  background-size:360% 360%;animation:pageshift 26s ease-in-out infinite;
+  color:var(--ink);display:flex;align-items:center;justify-content:center;
+  padding:16px;-webkit-font-smoothing:antialiased;user-select:none;overflow:hidden;
+}
+@keyframes pageshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+body::before,body::after{content:"";position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;z-index:0;pointer-events:none}
+body::before{width:460px;height:460px;left:-120px;top:-80px;background:radial-gradient(circle,#ff9ad5,transparent 70%);animation:drift1 18s ease-in-out infinite}
+body::after{width:520px;height:520px;right:-160px;bottom:-120px;background:radial-gradient(circle,#7fd8ff,transparent 70%);animation:drift2 22s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,40px) scale(1.15)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,-30px) scale(1.1)}}
+.num{font-family:'Baloo 2','ZCOOL KuaiLe',system-ui,sans-serif}
+
+/* ===== 手机外框 ===== */
+.phone{
+  position:relative;width:340px;height:680px;border-radius:44px;overflow:hidden;z-index:1;
+  background:linear-gradient(180deg,#8fd4ff 0%,#a9b8ff 45%,#c9a8ff 100%);
+  box-shadow:0 30px 60px -18px rgba(90,80,160,.55),0 0 0 9px #fff,0 0 0 11px #e7e2ff;
+  flex:none;touch-action:manipulation;
+}
+@media (max-height:760px){ .phone{transform:scale(.9)} }
+@media (max-height:690px){ .phone{transform:scale(.82)} }
+@media (max-width:600px){
+  body{padding:0;align-items:stretch;justify-content:stretch}
+  .phone{width:100vw;height:100vh;height:100svh;height:100dvh;border-radius:0;box-shadow:none;transform:none}
+}
+
+/* ===== 背景层 ===== */
+.bg{position:absolute;inset:0;z-index:0;overflow:hidden;
+  background:linear-gradient(180deg,#7fc9ff 0%,#9db6ff 40%,#c3a3f0 72%,#e7b9e8 100%)}
+.bg::before{content:"";position:absolute;top:-90px;left:50%;transform:translateX(-50%);
+  width:280px;height:280px;border-radius:50%;filter:blur(30px);
+  background:radial-gradient(circle,rgba(255,255,255,.7),transparent 68%)}
+.bg::after{content:"";position:absolute;left:0;right:0;bottom:-40px;height:180px;
+  background:radial-gradient(120% 100% at 50% 100%,rgba(255,246,214,.55),transparent 70%)}
+.aurora{position:absolute;inset:-20% -20% auto -20%;height:70%;filter:blur(34px);opacity:.6;
+  background:
+    radial-gradient(120px 90px at 25% 40%,#ff9ad5,transparent 70%),
+    radial-gradient(140px 100px at 70% 30%,#7fe8ff,transparent 70%),
+    radial-gradient(120px 90px at 55% 65%,#b6ff9a,transparent 70%);
+  animation:auroraMove 16s ease-in-out infinite}
+@keyframes auroraMove{0%,100%{transform:translate(0,0)}33%{transform:translate(18px,14px)}66%{transform:translate(-14px,8px)}}
+.rays{position:absolute;inset:0;pointer-events:none;opacity:.32;mix-blend-mode:screen;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,.16) 0 10px,transparent 10px 46px);
+  animation:rayShift 9s linear infinite}
+@keyframes rayShift{0%{background-position:0 0}100%{background-position:120px 0}}
+.bubbles{position:absolute;inset:0;pointer-events:none}
+.bubbles .bub{position:absolute;bottom:-24px;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.9),rgba(255,255,255,.15) 55%,rgba(255,255,255,.04));
+  box-shadow:inset 0 0 6px rgba(255,255,255,.5);animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:.8}90%{opacity:.8}100%{transform:translateY(-620px) translateX(var(--drift,14px));opacity:0}}
+.bubbles .twk{position:absolute;color:#fff;opacity:.85;pointer-events:none;
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.9));animation:twinkle ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:.95;transform:scale(1.1)}}
+
+/* ===== 顶栏 ===== */
+.top{position:absolute;top:0;left:0;right:0;height:70px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 18px;color:#fff;z-index:5}
+.pill{background:rgba(255,255,255,.28);backdrop-filter:blur(4px);border-radius:22px;
+  padding:7px 15px;display:flex;align-items:center;gap:6px;font-size:15px;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)}
+.pill .num{font-size:21px}
+.icon-btn{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.28);
+  display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4);transition:transform .12s}
+.icon-btn:active{transform:scale(.9)}
+
+/* ===== 目标 + 步数 HUD ===== */
+.hud{position:absolute;top:70px;left:0;right:0;height:64px;display:flex;align-items:center;
+  gap:10px;padding:0 16px;z-index:5}
+.goal{flex:1;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.9);
+  border-radius:18px;padding:7px 11px;box-shadow:0 8px 16px -10px rgba(70,60,120,.4)}
+.goal-ic{font-size:26px;flex:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.15));animation:goalbob 2.2s ease-in-out infinite}
+@keyframes goalbob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(-4deg)}}
+.goal-body{flex:1;min-width:0}
+.goal-label{font-size:11px;color:#8a86a5;font-family:'PingFang SC',system-ui;margin-bottom:3px}
+.bar{height:9px;border-radius:6px;background:#eceafc;overflow:hidden}
+.bar-fill{height:100%;width:0%;border-radius:6px;background:linear-gradient(90deg,#6bd07a,#41b45a);
+  transition:width .45s cubic-bezier(.34,1.4,.64,1)}
+.goal.done .bar-fill{background:linear-gradient(90deg,#ffd93d,#ff9f45)}
+.goal-num{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:15px;color:#5a5a80;flex:none}
+.moves{width:64px;height:52px;flex:none;background:rgba(255,255,255,.9);border-radius:18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 8px 16px -10px rgba(70,60,120,.4)}
+.moves-n{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:26px;color:#ff7a3d;line-height:1}
+.moves-l{font-size:10px;color:#8a86a5;font-family:'PingFang SC',system-ui;margin-top:1px}
+.moves.low .moves-n{color:#ec4b4b;animation:lowpulse .8s ease-in-out infinite}
+@keyframes lowpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+
+/* ===== 棋盘 ===== */
+.board-wrap{position:absolute;top:140px;left:0;right:0;bottom:104px;display:flex;
+  align-items:center;justify-content:center;z-index:2}
+#board{position:relative;border-radius:22px;
+  background:linear-gradient(160deg,rgba(90,70,150,.28),rgba(60,50,110,.34));
+  box-shadow:inset 0 2px 10px rgba(40,30,80,.35),0 10px 24px -12px rgba(40,30,80,.5);
+  padding:var(--pad,6px)}
+/* 棋盘格底纹（棋盘格深浅相间的坑位） */
+.cellbg{position:absolute;border-radius:14px;background:rgba(255,255,255,.06);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.12)}
+.cellbg.alt{background:rgba(255,255,255,.11)}
+
+/* ===== 瓷砖（动物块） ===== */
+.tile{position:absolute;width:var(--cell);height:var(--cell);left:0;top:0;
+  transition:transform .26s cubic-bezier(.4,1.15,.6,1);will-change:transform;z-index:3;cursor:pointer}
+.tile.falling{transition:transform .34s cubic-bezier(.5,0,.5,1.2)}
+.plate{position:absolute;inset:9%;border-radius:26%;
+  background:
+    radial-gradient(120% 90% at 30% 22%,rgba(255,255,255,.6),transparent 55%),
+    linear-gradient(160deg,var(--tint-l),var(--tint) 62%,var(--tint-d));
+  box-shadow:0 3px 0 var(--tint-d),0 5px 7px -3px rgba(30,20,60,.5),
+    inset 0 2px 3px rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;overflow:visible}
+.face{font-size:calc(var(--cell) * .56);line-height:1;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.22));
+  animation:idle var(--idle,3s) ease-in-out infinite;animation-delay:var(--iddelay,0s)}
+/* 待机小动画（呼吸+轻摇+偶尔小跳），随机相位错开更自然 */
+@keyframes idle{
+  0%,100%{transform:scale(1) rotate(0)}
+  25%{transform:scale(1.05,.96) rotate(-3deg)}
+  50%{transform:scale(.97,1.04) rotate(0)}
+  60%{transform:scale(1.02,1) translateY(-6%) rotate(3deg)}
+  75%{transform:scale(1) rotate(2deg)}
+}
+.shape{position:absolute;left:6%;top:6%;font-size:calc(var(--cell)*.2);opacity:.5;color:#fff;
+  font-family:'PingFang SC';pointer-events:none;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+
+/* 选中 / 无效抖动 / 提示脉冲 */
+.tile.sel{z-index:6}
+.tile.sel .plate{box-shadow:0 0 0 3px #fff,0 0 14px 3px rgba(255,255,255,.9),0 4px 8px -2px rgba(30,20,60,.5);
+  animation:selbob 1.1s ease-in-out infinite}
+@keyframes selbob{0%,100%{transform:scale(1.06)}50%{transform:scale(1.13)}}
+.tile.bad .plate{animation:tileshake .4s}
+@keyframes tileshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-14%)}75%{transform:translateX(14%)}}
+.tile.hint .plate{animation:hintpulse .7s ease-in-out infinite}
+@keyframes hintpulse{0%,100%{box-shadow:0 0 0 2px #fff,0 3px 0 var(--tint-d)}50%{box-shadow:0 0 0 4px #ffe27a,0 0 18px 5px rgba(255,210,60,.9)}}
+
+/* 消除弹裂 */
+.tile.pop{z-index:7}
+.tile.pop .plate{animation:popout .28s cubic-bezier(.5,-0.4,.7,.4) forwards}
+@keyframes popout{0%{transform:scale(1)}35%{transform:scale(1.3) rotate(8deg)}100%{transform:scale(0) rotate(30deg);opacity:0}}
+/* 新块落入 / 生成特殊块弹一下 */
+.tile.spawnin .plate,.plate.spawn{animation:spawnin .34s cubic-bezier(.34,1.56,.64,1)}
+@keyframes spawnin{0%{transform:scale(.2) rotate(-20deg)}60%{transform:scale(1.18) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+
+/* ===== tier 阶级可视化（金属阶框 铜→银→金 + 尺寸递增 + 星角标 + 满阶皇冠）===== */
+/* 族色辉光随 tier 增强：--glow=提亮后的族色，--tglow=强度(t0≈.12 → t3≈.60)。 */
+.plate{filter:drop-shadow(0 0 calc(var(--tglow,0) * 11px) color-mix(in srgb, var(--glow,#fff) calc(var(--tglow,0) * 130%), transparent))}
+/* 尺寸随阶递增：越高阶瓷砖越大（改 inset，避免与 transform 动画冲突） */
+.plate.t0{inset:11%}
+.plate.t1{inset:9%}
+.plate.t2{inset:7%}
+.plate.t3{inset:5%}
+.plate.t2 .face{font-size:calc(var(--cell)*.6)}
+.plate.t3 .face{font-size:calc(var(--cell)*.64)}
+/* 金属阶框：阶1青铜 / 阶2白银 / 阶3黄金，用 ::before 描边环 + 内外发光，不盖底盘立体阴影 */
+.plate::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;
+  border:0 solid transparent}
+.plate.t1::before{border-width:2.5px;border-color:#d98a3d;
+  box-shadow:0 0 7px 1px rgba(217,138,61,.7),inset 0 0 4px rgba(255,214,150,.6)}
+.plate.t2::before{border-width:2.5px;border-color:#eaf0f7;
+  box-shadow:0 0 8px 1px rgba(220,232,248,.8),inset 0 0 5px rgba(255,255,255,.7)}
+.plate.t3::before{border-width:3px;border-color:#ffcf47;
+  box-shadow:0 0 12px 2px rgba(255,207,71,.9),inset 0 0 6px rgba(255,238,170,.8)}
+.plate.sp-color::before{border-width:0}
+/* 星角标：底部一排 ⭐，阶1→1 星 … 阶3→3 星（阶0 不显，最朴素） */
+.tier-badge{position:absolute;left:0;right:0;bottom:1%;text-align:center;z-index:6;
+  font-size:calc(var(--cell) * .16);line-height:1;letter-spacing:-.08em;pointer-events:none;
+  filter:drop-shadow(0 1px 1px rgba(20,15,45,.55))}
+/* 满阶皇冠：戴头顶，一眼"顶级、可造核心" */
+.tier-crown{position:absolute;left:50%;top:-14%;transform:translateX(-50%);z-index:7;
+  font-size:calc(var(--cell) * .3);line-height:1;pointer-events:none;
+  filter:drop-shadow(0 1px 2px rgba(120,80,0,.5));animation:crownbob 1.4s ease-in-out infinite}
+@keyframes crownbob{0%,100%{transform:translateX(-50%) translateY(0) rotate(-4deg)}
+  50%{transform:translateX(-50%) translateY(-14%) rotate(4deg)}}
+/* 满阶(tier=MAXTIER)普通块：金色脉冲，暗示"再并一次就出彩虹核心" */
+.plate.tmax{animation:tmaxpulse 1.4s ease-in-out infinite}
+@keyframes tmaxpulse{
+  0%,100%{filter:drop-shadow(0 0 6px rgba(255,214,90,.8))}
+  50%{filter:drop-shadow(0 0 15px rgba(255,231,130,1))}}
+/* 彩虹核心自带旋转/辉光，清掉残留的族色 drop-shadow */
+.plate.sp-color{filter:drop-shadow(0 0 10px rgba(255,255,255,.85))!important}
+
+/* ===== 三连融合 FX ===== */
+/* 幸存格「并阶」弹跳：升阶=挤压回弹，满阶造核心=放大自转 */
+.plate.fuse{animation:fusepop .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes fusepop{0%{transform:scale(.72)}40%{transform:scale(1.3) rotate(-4deg)}72%{transform:scale(.94) rotate(2deg)}100%{transform:scale(1) rotate(0)}}
+.plate.fuse-core{animation:fusecore .64s cubic-bezier(.34,1.56,.64,1)}
+@keyframes fusecore{0%{transform:scale(.5) rotate(0)}45%{transform:scale(1.42) rotate(180deg)}100%{transform:scale(1) rotate(360deg)}}
+/* 融合冲击环（升阶=糖霜白环，核心=彩虹环）——尺寸/位移由 JS 的 WAAPI 驱动 */
+.fuse-ring{position:absolute;z-index:9;pointer-events:none;transform:translate(-50%,-50%);
+  border-radius:50%;border:3px solid rgba(255,255,255,.92);
+  box-shadow:0 0 16px 4px rgba(255,240,190,.8)}
+.fuse-ring.core{border-color:transparent;
+  background:conic-gradient(from 0deg,#ff5d73,#ffb01f,#ffe24a,#6bd07a,#4d96ff,#9b5de5,#ff5d73);
+  -webkit-mask:radial-gradient(transparent 54%,#000 58%);mask:radial-gradient(transparent 54%,#000 58%);
+  box-shadow:0 0 22px 8px rgba(255,200,120,.75)}
+/* 升阶上浮符号「↑」/核心「★」——同样由 WAAPI 驱动上浮淡出 */
+.fuse-up{position:absolute;z-index:12;pointer-events:none;transform:translate(-50%,-50%);
+  font-family:'Baloo 2','ZCOOL KuaiLe',sans-serif;font-weight:800;color:#fff;
+  text-shadow:0 0 7px rgba(255,222,120,.95),0 2px 3px rgba(20,15,45,.5)}
+/* 满阶/核心的局部彩色迸发碎片（越高阶越绚丽的收尾）——位移由 WAAPI 驱动 */
+.fuse-confetti{position:absolute;z-index:13;pointer-events:none;transform:translate(-50%,-50%);
+  width:calc(var(--cell) * .14);height:calc(var(--cell) * .2);border-radius:2px;
+  box-shadow:0 0 4px rgba(255,255,255,.55)}
+
+/* 特殊块激活光效：条纹→光束扫射，炸弹→冲击波 */
+.beam{position:absolute;z-index:8;pointer-events:none;border-radius:8px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);
+  box-shadow:0 0 16px 4px rgba(255,245,180,.9);animation:beam .34s ease-out forwards}
+@keyframes beam{0%{opacity:0;transform:scaleY(.2)}30%{opacity:1;transform:scaleY(1)}100%{opacity:0}}
+.blast{position:absolute;z-index:8;pointer-events:none;width:8px;height:8px;border-radius:50%;
+  transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,220,120,.95),rgba(255,150,60,.5) 60%,transparent 72%);
+  box-shadow:0 0 20px 6px rgba(255,180,80,.7);animation:blast .4s ease-out forwards}
+@keyframes blast{0%{width:8px;height:8px;opacity:1}100%{width:var(--d,90px);height:var(--d,90px);opacity:0}}
+
+/* ===== 特殊块外观 ===== */
+/* 条纹底纹（淡）作质感，叠加的方向双箭头 .sp-ic 才是"消行/消列"的主提示 */
+.plate.sp-stripeH::after,.plate.sp-stripeV::after{content:"";position:absolute;inset:16%;border-radius:18%;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 3px,transparent 3px 8px);opacity:.7}
+.plate.sp-stripeV::after{background:repeating-linear-gradient(0deg,rgba(255,255,255,.55) 0 3px,transparent 3px 8px)}
+.plate.sp-wrap{box-shadow:0 0 0 2px #fff,0 0 16px 4px rgba(255,180,60,.9),0 4px 8px -2px rgba(30,20,60,.5)}
+.plate.sp-color{background:conic-gradient(from 0deg,#ff5d73,#ffb01f,#ffe24a,#6bd07a,#4d96ff,#9b5de5,#ff5d73)!important;
+  animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tile .plate.sp-color + .face,.plate.sp-color .face{filter:drop-shadow(0 0 4px #fff)}
+/* 特殊块语义图标（内联 SVG）：居中、随格缩放、带描边阴影保证在任何底色上都清晰 */
+.sp-ic{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.sp-ic svg{width:74%;height:74%;filter:drop-shadow(0 1px 2px rgba(20,15,45,.75)) drop-shadow(0 0 2px rgba(20,15,45,.55))}
+.plate.sp-color .sp-ic svg{width:66%;height:66%}
+
+/* 果冻障碍层 */
+.jelly{position:absolute;inset:2%;border-radius:24%;pointer-events:none;z-index:2;
+  background:linear-gradient(160deg,rgba(120,220,255,.45),rgba(90,180,255,.3));
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.5),inset 0 0 12px rgba(120,220,255,.6)}
+.jelly.l2{background:linear-gradient(160deg,rgba(120,220,255,.7),rgba(70,150,255,.55));
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.6),inset 0 0 12px rgba(90,180,255,.8)}
+
+/* 连锁/得分飘字 */
+.floatn{position:absolute;z-index:12;font-family:'Baloo 2',sans-serif;font-weight:800;
+  color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.4);pointer-events:none;transform:translate(-50%,-50%);
+  animation:floatn 1s ease-out forwards;white-space:nowrap}
+@keyframes floatn{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-140%) scale(1)}}
+.combo-banner{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);z-index:13;
+  font-family:'ZCOOL KuaiLe',sans-serif;font-size:34px;color:#fff;pointer-events:none;
+  text-shadow:0 3px 0 #ff7a3d,0 6px 10px rgba(0,0,0,.35);animation:combo .9s ease-out forwards}
+@keyframes combo{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-8deg)}
+  25%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(3deg)}
+  70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-90%) scale(1)}}
+/* 星爆粒子 */
+.spark{position:absolute;z-index:11;pointer-events:none;font-size:16px;transform:translate(-50%,-50%);
+  will-change:transform,opacity}
+
+/* ===== 底部按钮 ===== */
+.dock{position:absolute;bottom:24px;left:0;right:0;display:flex;justify-content:center;gap:18px;z-index:5}
+.fab{width:66px;height:66px;border-radius:22px;background:#fff;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;color:#5a5a80;font-size:12px;cursor:pointer;
+  box-shadow:0 8px 16px -6px rgba(70,60,120,.4);font-family:'PingFang SC',system-ui;position:relative;
+  transition:transform .12s,box-shadow .12s;isolation:isolate}
+.fab::before{content:"";position:absolute;top:3px;left:7px;right:7px;height:42%;border-radius:20px 20px 30px 30px;
+  background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,0));pointer-events:none;z-index:2}
+.fab:active{transform:translateY(3px) scale(.95)}
+.fab.disabled{opacity:.5;pointer-events:none;filter:grayscale(.4)}
+.fab .e{font-size:24px;line-height:1;position:relative;z-index:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.18))}
+.fab .ic{width:28px;height:28px;display:block;position:relative;z-index:1;color:#fff;filter:drop-shadow(0 2px 2px rgba(0,0,0,.22))}
+.fab span:last-child{position:relative;z-index:1}
+#fab-booster{background:linear-gradient(160deg,#8be9ff 0%,#4d96ff 100%);color:#fff;box-shadow:0 9px 18px -6px rgba(77,150,255,.65)}
+#fab-restart{background:linear-gradient(160deg,#ffb3ea 0%,#ff6fb0 100%);color:#fff;box-shadow:0 9px 18px -6px rgba(255,111,176,.6)}
+.fab.primary{background:linear-gradient(160deg,#ffe27a 0%,#ffb01f 100%);color:#7a4a00;box-shadow:0 9px 18px -6px rgba(255,176,31,.7)}
+.ad{position:absolute;top:-7px;right:-7px;background:#ff5d73;color:#fff;font-size:9.5px;
+  padding:2px 6px;border-radius:10px;box-shadow:0 3px 6px rgba(255,93,115,.5);white-space:nowrap}
+
+/* ===== 弹窗 ===== */
+.overlay{position:absolute;inset:0;background:rgba(50,40,90,.45);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;z-index:20;animation:fade .2s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.card{width:270px;background:#fff;border-radius:32px;padding:26px 24px 24px;text-align:center;
+  box-shadow:0 24px 40px -12px rgba(60,40,120,.5);position:relative;animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.card h2{font-size:27px;color:#ff8a3d}
+.card .sub{font-size:14px;color:#8a86a5;font-family:'PingFang SC';margin-top:4px}
+.win-stars{display:flex;justify-content:center;gap:8px;margin:8px 0 6px;font-size:44px}
+.win-stars .s{filter:drop-shadow(0 4px 4px rgba(255,180,0,.4));animation:starpop .4s backwards}
+.win-stars .s:nth-child(2){animation-delay:.12s}
+.win-stars .s:nth-child(3){animation-delay:.24s}
+.win-stars .off{opacity:.25;filter:none;animation:none}
+@keyframes starpop{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
+.scoreline{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:30px;color:#5a5a80;margin:6px 0}
+.msg{font-size:14px;color:#8a86a5;margin:6px 6px 2px;font-family:'PingFang SC'}
+.btn{margin-top:12px;height:52px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+  gap:8px;font-size:18px;color:#fff;cursor:pointer;background:linear-gradient(180deg,#6bd07a,#41b45a);
+  box-shadow:0 10px 18px -8px rgba(65,180,90,.7);transition:transform .12s}
+.btn:active{transform:translateY(2px) scale(.98)}
+.btn.ghost{background:#f0eef8;color:#8a86a5;box-shadow:none;height:44px;font-size:15px;margin-top:8px}
+.btn.ad{background:linear-gradient(180deg,#ffb43d,#ff8a1e);box-shadow:0 10px 18px -8px rgba(255,140,30,.7)}
+.btn .tag{font-size:11px;background:rgba(255,255,255,.35);padding:2px 7px;border-radius:9px}
+
+/* ===== 设置 / 广告 / toast（沿用） ===== */
+.set-wrap{position:absolute;top:80px;left:0;right:0;bottom:0;padding-top:6px;overflow-y:auto;z-index:6}
+.srow{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border-radius:20px;
+  margin:0 18px 12px;box-shadow:0 8px 16px -10px rgba(70,60,120,.35)}
+.srow .si{font-size:24px;width:28px;text-align:center;flex:none}
+.srow .st{flex:1;min-width:0}
+.srow .st b{font-size:16px;color:#3a3a5c}
+.srow .st span{font-size:11px;color:#9a9ab5;font-family:'PingFang SC',system-ui;display:block;margin-top:2px;line-height:1.4}
+.toggle{width:50px;height:28px;border-radius:15px;background:#dcd8ec;position:relative;flex:none;cursor:pointer;transition:background .2s}
+.toggle.on{background:linear-gradient(90deg,#6bd07a,#41b45a)}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25);transition:left .2s}
+.toggle.on::after{left:25px}
+.set-note{margin:4px 20px 20px;font-size:11px;color:#efe9ff;font-family:'PingFang SC',system-ui;line-height:1.6;text-align:center;opacity:.9}
+.ad-overlay{position:absolute;inset:0;background:#12101f;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;z-index:40;color:#fff;text-align:center}
+.ad-overlay .adbox{width:220px;height:150px;border-radius:16px;
+  background:linear-gradient(135deg,#3a2a70,#7a5cff);display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-family:'PingFang SC';box-shadow:0 12px 30px -8px rgba(122,92,255,.6)}
+.ad-overlay .tip{font-size:13px;color:#b9b3d8;font-family:'PingFang SC'}
+.ad-overlay .skip{margin-top:6px;padding:9px 20px;border-radius:16px;background:rgba(255,255,255,.16);
+  font-size:14px;font-family:'PingFang SC';cursor:pointer;opacity:.5;pointer-events:none;transition:opacity .2s}
+.ad-overlay .skip.ready{opacity:1;pointer-events:auto;background:rgba(255,255,255,.28)}
+.toast{position:absolute;top:150px;left:50%;transform:translateX(-50%);z-index:30;
+  background:rgba(43,43,69,.9);color:#fff;font-size:13px;font-family:'PingFang SC';
+  padding:8px 16px;border-radius:16px;animation:toast 1.7s forwards;pointer-events:none;white-space:nowrap;max-width:80%;text-align:center}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,8px)}12%,75%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-8px)}}
+.btn.disabled{opacity:.55;pointer-events:none;filter:grayscale(.3)}
+
+/* ===== 设置：英语难度选择 + 特殊块图例 ===== */
+.chooser{font-size:13px;color:#7a6cff;font-family:'PingFang SC',system-ui;font-weight:600;flex:none;cursor:pointer;
+  background:#f0eef8;padding:6px 12px;border-radius:14px}
+.srow.legend{display:block}
+.srow.legend .st{margin-top:2px}
+.sp-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:10px}
+.spl{display:flex;align-items:center;gap:8px;font-size:12px;color:#5a5a80;font-family:'PingFang SC',system-ui}
+.spl-ic{width:30px;height:30px;flex:none;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#8be9ff,#4d96ff)}
+.spl-ic svg{width:80%;height:80%;filter:drop-shadow(0 1px 1px rgba(20,15,45,.5))}
+.spl:nth-child(3) .spl-ic{background:linear-gradient(160deg,#ffce54,#ff8a1e)}
+.spl:nth-child(4) .spl-ic{background:conic-gradient(from 0deg,#ff5d73,#ffb01f,#ffe24a,#6bd07a,#4d96ff,#9b5de5,#ff5d73)}
+/* 玩法介绍 */
+.howto{margin-top:10px;font-size:12.5px;color:#5a5a80;font-family:'PingFang SC',system-ui;line-height:1.7}
+.howto p{margin:0 0 7px}
+.howto p:last-child{margin-bottom:0}
+.howto b{color:#3a3a5c}
+.howto .ht-tier{font-size:15px;letter-spacing:.06em;vertical-align:-1px}
+.howto .ht-b1{color:#c97b34}.howto .ht-b2{color:#8f9bb3}.howto .ht-b3{color:#e0a52a}
+
+/* ===== 英语答题弹窗 ===== */
+.quiz-card{width:290px;padding:22px 22px 20px}
+.quiz-card .voc-close{position:absolute;top:12px;right:14px;border:none;background:transparent;font-size:20px;
+  color:#c3bede;cursor:pointer;line-height:1;padding:2px 6px}
+.quiz-head{font-size:13px;color:#8a86a5;font-family:'PingFang SC',system-ui;margin-bottom:6px}
+.voc-word{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:40px;color:#3a3a5c;line-height:1.1;
+  word-break:break-word}
+.voc-ipa-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 4px}
+.voc-speak{border:none;background:linear-gradient(160deg,#8be9ff,#4d96ff);color:#fff;width:36px;height:36px;
+  border-radius:50%;font-size:17px;cursor:pointer;box-shadow:0 6px 12px -5px rgba(77,150,255,.7);flex:none}
+.voc-speak:active{transform:translateY(2px) scale(.95)}
+.voc-ipa{font-size:15px;color:#7a6cff;font-family:'Baloo 2',sans-serif}
+.voc-q{font-size:12px;color:#9a9ab5;font-family:'PingFang SC',system-ui;margin:8px 0 4px}
+.voc-opts{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+.voc-opt{border:2px solid #ece9f6;background:#faf9ff;border-radius:16px;height:46px;font-size:16px;
+  color:#3a3a5c;font-family:'PingFang SC',system-ui;cursor:pointer;transition:transform .1s,background .15s,border-color .15s}
+.voc-opt:active{transform:translateY(1px) scale(.99)}
+.voc-opt.right{border-color:#41b45a;background:linear-gradient(180deg,#d7f6de,#bff0cc);color:#227a3d;font-weight:700}
+.voc-opt.wrong{border-color:#ec4b4b;background:linear-gradient(180deg,#ffe0e0,#ffc9c9);color:#c02b2b;animation:qwiggle .32s}
+.voc-opt.dim{opacity:.45}
+@keyframes qwiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+.voc-tip{min-height:20px;margin-top:12px;font-size:13px;color:#5a5a80;font-family:'PingFang SC',system-ui;line-height:1.5}
+.voc-tip b{color:#3a3a5c}
+.voc-tip .voc-ipa{font-size:13px}
+.voc-next{color:#9a9ab5;font-size:12px}
